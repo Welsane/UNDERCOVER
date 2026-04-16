@@ -30,6 +30,3 @@ A fully interactive, dark-themed, mobile-friendly party word game inspired by *U
 | `style.css` | Dark theme, animations |
 | `wordbank.js` | 200+ word pairs |
 | `game.js` | Full game logic |
-
-## 📦 Deploy
-No build step needed. Drop the folder on [Netlify](https://app.netlify.com/drop) or enable GitHub Pages.
