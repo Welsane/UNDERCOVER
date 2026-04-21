@@ -289,12 +289,12 @@ function startGame() {
   for (let i = 0; i < state.undercoverCount; i++) roles.push('undercover');
   if (state.hasMrWhite) roles.push('mrwhite');
 
-  // Shuffle roles
-  shuffle(roles);
+  // Shuffle roles (Fisher-Yates returns a new array — must capture it)
+  const shuffledRoles = shuffle(roles);
 
   state.players = state.playerNames.map((name, i) => ({
     name,
-    role: roles[i],
+    role: shuffledRoles[i],
     eliminated: false,
   }));
 
