@@ -588,44 +588,51 @@ document.getElementById('btn-mrwhite-guess').addEventListener('click', () => {
 
   document.getElementById('mrwhite-guess-wrap').style.display = 'none';
 
+  const aliveUnder = state.players.filter(p => !p.eliminated && p.role === 'undercover');
+  const eliminatedMrW = state.players.find(p => p.role === 'mrwhite' && p.eliminated);
+
   if (guess === civWord || guess === state.underWord.toLowerCase()) {
-    // Mr. White wins!
-    SFX.win();
-    document.getElementById('elim-outcome').textContent = `✅ "${guess.toUpperCase()}" — That's correct! Mr. White wins! 🎉`;
-    // Award points to Mr. White player
-    const mrw = state.players.find(p => p.role === 'mrwhite');
-    if (mrw && state.scores[mrw.name]) {
-      state.scores[mrw.name].points += 3;
-      state.scores[mrw.name].wins   += 1;
+    if (aliveUnder.length === 0) {
+      // ✅ Mr. White wins — last special player and correct guess!
+      SFX.win();
+      document.getElementById('elim-outcome').textContent = `✅ "${guess.toUpperCase()}" — That's correct! Mr. White wins! 🎉`;
+      const mrw = state.players.find(p => p.role === 'mrwhite');
+      if (mrw && state.scores[mrw.name]) {
+        state.scores[mrw.name].points += 3;
+        state.scores[mrw.name].wins   += 1;
+      }
+      setTimeout(() => showWinScreen('mrwhite'), 1800);
+    } else {
+      // Correct guess but Undercovers are still alive — game continues
+      SFX.lose();
+      document.getElementById('elim-outcome').textContent =
+        `✅ Correct word! But Undercovers are still in the game...`;
+      setTimeout(() => checkWinCondition(eliminatedMrW), 2000);
     }
-    setTimeout(() => showWinScreen('mrwhite'), 1800);
   } else {
     SFX.lose();
     document.getElementById('elim-outcome').textContent = `❌ "${guess.toUpperCase()}" — Wrong! The word was "${state.civWord}".`;
-    // Check normal win condition now (Mr. White already eliminated)
-    const eliminatedPlayer = state.players.find(p => p.role === 'mrwhite' && p.eliminated);
-    setTimeout(() => checkWinCondition(eliminatedPlayer, true), 2000);
+    setTimeout(() => checkWinCondition(eliminatedMrW), 2000);
   }
   document.getElementById('btn-after-elim').style.display = 'block';
 });
 
-function checkWinCondition(eliminatedPlayer, mrwhiteFailed = false) {
-  const aliveUnder  = state.players.filter(p => !p.eliminated && p.role === 'undercover');
-  const aliveCiv    = state.players.filter(p => !p.eliminated && p.role === 'civilian');
-  const aliveMrW    = state.players.filter(p => !p.eliminated && p.role === 'mrwhite');
-  const aliveTotal  = state.players.filter(p => !p.eliminated);
-  const aliveSpecial = aliveUnder.length + aliveMrW.length;
+function checkWinCondition(eliminatedPlayer) {
+  const aliveUnder = state.players.filter(p => !p.eliminated && p.role === 'undercover');
+  const aliveCiv   = state.players.filter(p => !p.eliminated && p.role === 'civilian');
+  const aliveMrW   = state.players.filter(p => !p.eliminated && p.role === 'mrwhite');
 
   let outcome = '';
 
   if (aliveUnder.length === 0 && aliveMrW.length === 0) {
-    // All undercovers and Mr. White eliminated → Civilians win
+    // All Undercovers AND Mr. White eliminated → Civilians win
     outcome = 'civilians';
-  } else if (aliveSpecial >= aliveCiv.length) {
-    // Undercovers/Mr. White equal or outnumber civilians → Undercovers/Mr. White win
-    outcome = aliveUnder.length > 0 ? 'undercover' : 'mrwhite';
+  } else if (aliveUnder.length > 0 && aliveUnder.length >= aliveCiv.length) {
+    // Undercovers (only) equal or outnumber Civilians → Undercover wins
+    // Mr. White does NOT count toward this threshold
+    outcome = 'undercover';
   } else {
-    // Game continues
+    // Game continues — let civilians keep voting
     outcome = 'continue';
   }
 
