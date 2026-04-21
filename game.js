@@ -711,6 +711,9 @@ function checkWinCondition(eliminatedPlayer) {
   const outcomeEl = document.getElementById('elim-outcome');
   const btn       = document.getElementById('btn-after-elim');
 
+  // Always re-enable — it may have been disabled from a previous "Next Round" click
+  btn.disabled = false;
+
   if (outcome === 'continue') {
     outcomeEl.textContent = `${eliminatedPlayer.name} was a ${getRoleLabel(eliminatedPlayer.role)}. Game continues!`;
     btn.textContent = 'Next Round →';
