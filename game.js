@@ -441,7 +441,9 @@ function showPickerScreen(onContinue) {
       // Show continue button after winner animation lands
       setTimeout(() => {
         goBtn.style.display = 'block';
-        goBtn.onclick = () => onContinue();
+        goBtn.disabled = false;
+        // Disable immediately on click to prevent double-firing
+        goBtn.onclick = () => { goBtn.disabled = true; onContinue(); };
       }, 700);
     }
   }
@@ -679,7 +681,9 @@ document.getElementById('btn-mrwhite-guess').addEventListener('click', () => {
     document.getElementById('elim-outcome').textContent = `❌ "${guess.toUpperCase()}" — Wrong! The word was "${state.civWord}".`;
     setTimeout(() => checkWinCondition(eliminatedMrW), 2000);
   }
-  document.getElementById('btn-after-elim').style.display = 'block';
+  // NOTE: btn-after-elim is intentionally NOT shown here.
+  // checkWinCondition() will reveal it with the correct onclick after evaluating game state.
+  // Showing it immediately would expose a stale onclick from a previous checkWinCondition call.
 });
 
 function checkWinCondition(eliminatedPlayer) {
@@ -693,11 +697,14 @@ function checkWinCondition(eliminatedPlayer) {
     // All Undercovers AND Mr. White eliminated → Civilians win
     outcome = 'civilians';
   } else if (aliveUnder.length > 0 && aliveUnder.length >= aliveCiv.length) {
-    // Undercovers (only) equal or outnumber Civilians → Undercover wins
-    // Mr. White does NOT count toward this threshold
+    // Undercovers equal or outnumber Civilians → Undercover wins (Mr. White NOT counted)
     outcome = 'undercover';
+  } else if (aliveCiv.length === 0) {
+    // Edge case: all civilians somehow eliminated while a special survives
+    // Award win to whoever is still alive
+    outcome = aliveUnder.length > 0 ? 'undercover' : 'mrwhite';
   } else {
-    // Game continues — let civilians keep voting
+    // Game continues — civilians keep voting
     outcome = 'continue';
   }
 
@@ -709,7 +716,7 @@ function checkWinCondition(eliminatedPlayer) {
     btn.textContent = 'Next Round →';
     btn.style.display = 'block';
     // Skip reveal phase — players already know their roles from round 1
-    btn.onclick = () => { state.round++; startDiscussion(); };
+    btn.onclick = () => { btn.disabled = true; state.round++; startDiscussion(); };
   } else {
     // Award scores
     awardScores(outcome);
