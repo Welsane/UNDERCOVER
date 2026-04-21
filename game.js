@@ -387,11 +387,76 @@ document.getElementById('btn-done-reveal').addEventListener('click', () => {
 /* ═══════════════════════════════════
    DISCUSSION PHASE
 ═══════════════════════════════════ */
+/* ─── Picker: weighted random "who goes first" ─── */
+function showPickerScreen(onContinue) {
+  const alive = state.players.filter(p => !p.eliminated);
+
+  // Build weighted pool — civilians 3×, Undercover/Mr.White 1×
+  const pool = [];
+  alive.forEach(p => {
+    const w = p.role === 'civilian' ? 3 : 1;
+    for (let i = 0; i < w; i++) pool.push(p);
+  });
+  const winner = pool[Math.floor(Math.random() * pool.length)];
+
+  // Reset UI
+  const slotEl      = document.getElementById('picker-slot');
+  const slotName    = document.getElementById('picker-slot-name');
+  const winnerWrap  = document.getElementById('picker-winner-wrap');
+  const winnerName  = document.getElementById('picker-winner-name');
+  const goBtn       = document.getElementById('btn-picker-go');
+  const subtitle    = document.getElementById('picker-subtitle');
+
+  slotEl.style.display     = '';
+  slotName.textContent     = '—';
+  winnerWrap.style.display = 'none';
+  goBtn.style.display      = 'none';
+  subtitle.textContent     = 'Picking a lucky player…';
+
+  goTo('screen-picker');
+
+  // Slot machine: starts fast then decelerates to the winner
+  // Each number = ms to wait before next tick
+  const delays = [70, 70, 75, 80, 85, 95, 110, 135, 170, 220, 290, 390, 510, 660, 840, 1050];
+  let step = 0;
+
+  function tick() {
+    if (step < delays.length - 1) {
+      // Show a random alive player during cycling
+      const rnd = alive[Math.floor(Math.random() * alive.length)];
+      slotName.textContent = rnd.name;
+      // Trigger flash animation
+      slotName.classList.remove('slot-flash');
+      void slotName.offsetWidth; // force reflow
+      slotName.classList.add('slot-flash');
+      step++;
+      setTimeout(tick, delays[step]);
+    } else {
+      // Reveal winner
+      slotEl.style.display     = 'none';
+      winnerName.textContent   = winner.name;
+      winnerWrap.style.display = 'flex';
+      subtitle.textContent     = '';
+      SFX.win();
+      // Show continue button after winner animation lands
+      setTimeout(() => {
+        goBtn.style.display = 'block';
+        goBtn.onclick = () => onContinue();
+      }, 700);
+    }
+  }
+
+  // Start cycling after the screen transition settles
+  setTimeout(() => { step = 0; tick(); }, 480);
+}
+
 function startDiscussion() {
-  document.getElementById('round-pill').textContent = `Round ${state.round}`;
-  renderDiscussionOrder();
-  setupTimer();
-  goTo('screen-discussion');
+  showPickerScreen(() => {
+    document.getElementById('round-pill').textContent = `Round ${state.round}`;
+    renderDiscussionOrder();
+    setupTimer();
+    goTo('screen-discussion');
+  });
 }
 
 function renderDiscussionOrder() {
