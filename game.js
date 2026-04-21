@@ -568,6 +568,10 @@ function eliminatePlayer(name) {
     nameEl.classList.add(cfg.cls);
 
     if (player.role === 'mrwhite') {
+      // Permanently disable Mr. White for any future rounds/games this session
+      state.hasMrWhite = false;
+      const mrwToggle = document.getElementById('toggle-mrwhite');
+      if (mrwToggle) mrwToggle.checked = false;
       // Mr. White gets a chance to guess
       document.getElementById('mrwhite-guess-wrap').style.display = 'flex';
       document.getElementById('mrwhite-guess-input').value = '';
@@ -632,7 +636,8 @@ function checkWinCondition(eliminatedPlayer, mrwhiteFailed = false) {
     outcomeEl.textContent = `${eliminatedPlayer.name} was a ${getRoleLabel(eliminatedPlayer.role)}. Game continues!`;
     btn.textContent = 'Next Round →';
     btn.style.display = 'block';
-    btn.onclick = () => { state.round++; startRevealPhase(); };
+    // Skip reveal phase — players already know their roles from round 1
+    btn.onclick = () => { state.round++; startDiscussion(); };
   } else {
     // Award scores
     awardScores(outcome);
