@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Undercover Online — Party Word Game</title>
+  <meta name="description" content="Play Undercover online with friends anywhere. Real-time multiplayer word game with voice notes." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ==================== HOME ==================== -->
+  <div id="screen-home" class="screen active">
+    <div class="home-bg-glow"></div>
+    <div class="home-content">
+      <div class="logo-wrap">
+        <div class="logo-icon">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="20" r="12" stroke="url(#g1)" stroke-width="3"/>
+            <path d="M12 52c0-11 9-18 20-18s20 7 20 18" stroke="url(#g1)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="52" cy="16" r="7" fill="url(#g2)" opacity="0.7"/>
+            <path d="M46 8l3 4-4 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="g1" x1="12" y1="8" x2="52" y2="52" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#ec4899"/></linearGradient>
+              <linearGradient id="g2" x1="45" y1="9" x2="59" y2="23" gradientUnits="userSpaceOnUse"><stop stop-color="#f472b6"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <h1 class="logo-title">UNDERCOVER</h1>
+        <p class="logo-sub">Online Multiplayer • Voice Notes</p>
+      </div>
+
+      <div class="home-actions">
+        <button class="btn btn-primary btn-xl" id="btn-create-room">
+          <span>🎮 Create Room</span>
+        </button>
+        <button class="btn btn-secondary btn-xl" id="btn-join-room-home">
+          <span>🔗 Join Room</span>
+        </button>
+        <button class="btn btn-ghost" id="btn-how-to-play">How to Play</button>
+      </div>
+      <div class="version-tag">v3.0 Online · Made with ❤️ for party nights</div>
+    </div>
+  </div>
+
+  <!-- ==================== HOW TO PLAY ==================== -->
+  <div id="screen-howto" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="btn-back-howto">← Back</button>
+      <h2>How to Play</h2>
+    </div>
+    <div class="howto-content">
+      <div class="howto-step"><div class="step-num">01</div><div class="step-body"><h3>Create or Join</h3><p>One player creates a room and shares the 4-letter code. Everyone joins from their own phone — no Wi-Fi sharing needed!</p></div></div>
+      <div class="howto-step"><div class="step-num">02</div><div class="step-body"><h3>Secret Roles</h3><p>Each player privately sees their role. Civilians get a word. Undercovers get a similar but different word. Mr. White gets nothing.</p></div></div>
+      <div class="howto-step"><div class="step-num">03</div><div class="step-body"><h3>Describe</h3><p>Everyone submits ONE clue — type it or record a voice note! Be clever: too obvious and undercovers blend in; too vague and you'll look suspicious.</p></div></div>
+      <div class="howto-step"><div class="step-num">04</div><div class="step-body"><h3>Listen & Vote</h3><p>Play everyone's voice notes on your phone. Then vote to eliminate the most suspicious player!</p></div></div>
+      <div class="role-explainer">
+        <div class="role-card civilian"><div class="role-badge">👁️</div><div class="role-name">Civilian</div><div class="role-goal">Catch the Undercover & Mr. White</div></div>
+        <div class="role-card undercover"><div class="role-badge">🕵️</div><div class="role-name">Undercover</div><div class="role-goal">Survive until the numbers favor you</div></div>
+        <div class="role-card mrwhite"><div class="role-badge">👻</div><div class="role-name">Mr. White</div><div class="role-goal">Blend in, then guess the civilian word</div></div>
+      </div>
+      <button class="btn btn-primary" id="btn-howto-play">Let's Play!</button>
+    </div>
+  </div>
+
+  <!-- ==================== CREATE ROOM ==================== -->
+  <div id="screen-create" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="btn-back-create">← Back</button>
+      <h2>Create Room</h2>
+    </div>
+    <div class="setup-content">
+      <div class="setup-section">
+        <label class="setup-label">Your Name</label>
+        <input type="text" id="create-name" class="player-name-input big-input" placeholder="Enter your name…" maxlength="16" />
+      </div>
+
+      <div class="setup-section">
+        <label class="setup-label">Undercovers</label>
+        <div class="number-picker">
+          <button class="picker-btn" id="create-under-dec">−</button>
+          <span class="picker-val" id="create-under-display">1</span>
+          <button class="picker-btn" id="create-under-inc">+</button>
+        </div>
+      </div>
+
+      <div class="setup-section toggle-section">
+        <label class="setup-label">Mr. White</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="create-mrwhite" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="info-card">
+        <span>⚙️</span>
+        <p>You can adjust these before the game starts in the lobby.</p>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="btn-create-go">Create Room →</button>
+    </div>
+  </div>
+
+  <!-- ==================== JOIN ROOM ==================== -->
+  <div id="screen-join" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" id="btn-back-join">← Back</button>
+      <h2>Join Room</h2>
+    </div>
+    <div class="setup-content">
+      <div class="setup-section">
+        <label class="setup-label">Room Code</label>
+        <input type="text" id="join-code" class="player-name-input big-input code-input" placeholder="ABCD" maxlength="4" autocomplete="off" autocapitalize="characters" />
+      </div>
+      <div class="setup-section">
+        <label class="setup-label">Your Name</label>
+        <input type="text" id="join-name" class="player-name-input big-input" placeholder="Enter your name…" maxlength="16" />
+      </div>
+      <button class="btn btn-primary btn-full" id="btn-join-go">Join Game →</button>
+    </div>
+  </div>
+
+  <!-- ==================== LOBBY ==================== -->
+  <div id="screen-lobby" class="screen">
+    <div class="lobby-header">
+      <h2>Room Lobby</h2>
+      <div class="room-code-wrap">
+        <span class="room-code-label">Room Code</span>
+        <div class="room-code-big" id="lobby-code">----</div>
+        <button class="btn btn-ghost btn-sm" id="btn-copy-code">📋 Copy</button>
+      </div>
+    </div>
+
+    <div class="lobby-settings" id="lobby-settings">
+      <div class="settings-row">
+        <span class="settings-label">Undercovers</span>
+        <div class="number-picker mini">
+          <button class="picker-btn" id="lobby-under-dec">−</button>
+          <span class="picker-val" id="lobby-under-display">1</span>
+          <button class="picker-btn" id="lobby-under-inc">+</button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">Mr. White</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="lobby-mrwhite" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="lobby-players-section">
+      <div class="lobby-players-header">
+        <span class="lobby-players-title">Players</span>
+        <span class="lobby-players-count" id="lobby-player-count">0 / 12</span>
+      </div>
+      <div class="lobby-players-list" id="lobby-players-list"></div>
+    </div>
+
+    <div class="lobby-waiting" id="lobby-waiting-msg">
+      <div class="waiting-dots"><span></span><span></span><span></span></div>
+      <p>Waiting for host to start…</p>
+    </div>
+
+    <button class="btn btn-primary btn-full btn-glow" id="btn-start-game" style="display:none">
+      Start Game →
+    </button>
+  </div>
+
+  <!-- ==================== ROLE REVEAL ==================== -->
+  <div id="screen-reveal" class="screen">
+    <div class="reveal-content">
+      <div class="reveal-header">
+        <div class="reveal-round-pill" id="reveal-round-pill">Round 1</div>
+        <h2>Your Secret Role</h2>
+        <p class="reveal-subtitle">This is private — don't show anyone!</p>
+      </div>
+
+      <div class="reveal-card" id="reveal-card">
+        <div class="your-role-label" id="your-role-label">You are a</div>
+        <div class="role-badge-big" id="role-badge-big">👁️</div>
+        <div class="role-name-big" id="role-name-big">Civilian</div>
+        <div class="word-card-flip">
+          <div class="word-card-front">Your word:</div>
+          <div class="word-card-inner" id="word-card-inner">
+            <span id="word-display">—</span>
+          </div>
+        </div>
+        <div class="role-instruction" id="role-instruction">Remember your word!</div>
+      </div>
+
+      <div class="ready-progress" id="ready-progress-wrap">
+        <span id="ready-progress-text">0 / ? ready</span>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="btn-i-am-ready">
+        ✓ I've seen my word
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== DESCRIPTION PHASE ==================== -->
+  <div id="screen-description" class="screen">
+    <div class="screen-header no-back">
+      <h2>Submit Your Clue</h2>
+      <div class="round-pill" id="desc-round-pill">Round 1</div>
+    </div>
+
+    <div class="desc-reminder" id="desc-reminder">
+      <span id="desc-reminder-word">—</span>
+      <span class="desc-reminder-label">your word</span>
+    </div>
+
+    <div class="desc-tabs">
+      <button class="desc-tab active" id="tab-text" data-tab="text">⌨️ Type</button>
+      <button class="desc-tab" id="tab-voice" data-tab="voice">🎙️ Voice Note</button>
+    </div>
+
+    <!-- Text tab -->
+    <div class="desc-panel" id="panel-text">
+      <textarea id="desc-text-input" class="desc-textarea" placeholder="Type one clue about your word… (don't say it directly!)" maxlength="200" rows="4"></textarea>
+      <div class="char-count" id="char-count">0 / 200</div>
+    </div>
+
+    <!-- Voice tab -->
+    <div class="desc-panel hidden" id="panel-voice">
+      <div class="vn-container">
+        <div class="vn-status" id="vn-status">Tap the mic to record</div>
+        <button class="vn-mic-btn" id="btn-vn-record" title="Record voice note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <div class="vn-waveform" id="vn-waveform">
+          <div class="vn-bar"></div><div class="vn-bar"></div><div class="vn-bar"></div>
+          <div class="vn-bar"></div><div class="vn-bar"></div><div class="vn-bar"></div>
+          <div class="vn-bar"></div><div class="vn-bar"></div>
+        </div>
+        <div class="vn-timer" id="vn-timer">0:00</div>
+
+        <div class="vn-preview" id="vn-preview" style="display:none">
+          <audio id="vn-playback" controls></audio>
+          <button class="btn btn-ghost btn-sm" id="btn-vn-redo">🔄 Re-record</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="desc-progress" id="desc-progress">
+      <div class="desc-progress-bar"><div class="desc-progress-fill" id="desc-progress-fill"></div></div>
+      <span id="desc-progress-text">0 / ? submitted</span>
+    </div>
+
+    <div class="submitted-overlay" id="submitted-overlay" style="display:none">
+      <div class="submitted-check">✓</div>
+      <p>Clue submitted! Waiting for others…</p>
+      <div class="waiting-dots"><span></span><span></span><span></span></div>
+      <div id="submitted-players-list" class="submitted-names"></div>
+    </div>
+
+    <button class="btn btn-primary btn-full" id="btn-submit-desc">Submit Clue →</button>
+  </div>
+
+  <!-- ==================== DISCUSSION PHASE ==================== -->
+  <div id="screen-discussion" class="screen">
+    <div class="screen-header no-back">
+      <h2>Discussion Phase</h2>
+      <div class="round-pill" id="disc-round-pill">Round 1</div>
+    </div>
+
+    <p class="disc-hint">Listen to everyone's clues, then vote!</p>
+
+    <div class="disc-list" id="disc-list"></div>
+
+    <button class="btn btn-primary btn-full btn-glow" id="btn-go-vote">
+      Proceed to Vote →
+    </button>
+    <p class="host-only-hint" id="vote-host-hint" style="display:none">Only the host can advance</p>
+  </div>
+
+  <!-- ==================== VOTING PHASE ==================== -->
+  <div id="screen-voting" class="screen">
+    <div class="screen-header no-back">
+      <h2>Vote to Eliminate</h2>
+    </div>
+    <p class="vote-sub">Who do you think is the Undercover or Mr. White?</p>
+    <div class="vote-progress-wrap">
+      <span id="vote-progress-text">0 / ? voted</span>
+    </div>
+    <div class="vote-list" id="vote-list"></div>
+
+    <div class="voted-overlay" id="voted-overlay" style="display:none">
+      <div class="submitted-check">✓</div>
+      <p>Vote cast! Waiting for others…</p>
+      <div class="waiting-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <button class="btn btn-primary btn-full btn-danger" id="btn-cast-vote" disabled>
+      Cast Vote ✓
+    </button>
+  </div>
+
+  <!-- ==================== ELIMINATION ==================== -->
+  <div id="screen-elimination" class="screen">
+    <div class="elimination-theater">
+      <div class="elim-ring"></div>
+      <div class="elim-player-name" id="elim-player-name">Player</div>
+      <div class="elim-role-reveal">
+        <div class="elim-role-badge" id="elim-role-badge">?</div>
+        <div class="elim-role-name" id="elim-role-name">???</div>
+      </div>
+
+      <!-- Mr. White guess (only shown to Mr. White's device) -->
+      <div id="mrwhite-guess-wrap" style="display:none">
+        <p class="mrwhite-prompt">Mr. White! Guess the civilian word to steal the win:</p>
+        <input type="text" class="mrwhite-input" id="mrwhite-guess-input" placeholder="Enter your guess…" />
+        <button class="btn btn-primary" id="btn-mrwhite-guess">Submit Guess</button>
+      </div>
+
+      <!-- Shown to everyone else while Mr. White guesses -->
+      <div id="mrwhite-waiting" style="display:none">
+        <p class="mrwhite-prompt">Mr. White is guessing the civilian word…</p>
+        <div class="waiting-dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="elim-outcome" id="elim-outcome"></div>
+    </div>
+  </div>
+
+  <!-- ==================== WIN SCREEN ==================== -->
+  <div id="screen-win" class="screen">
+    <div class="win-confetti" id="win-confetti"></div>
+    <div class="win-content">
+      <div class="win-badge" id="win-badge">🎉</div>
+      <h2 class="win-title" id="win-title">Civilians Win!</h2>
+      <p class="win-sub" id="win-sub">The undercover has been caught.</p>
+
+      <div class="win-word-reveal">
+        <div class="win-word-row"><span class="ww-label">Civilian Word</span><span class="ww-val" id="revealed-civ-word">—</span></div>
+        <div class="win-word-row"><span class="ww-label">Undercover Word</span><span class="ww-val" id="revealed-under-word">—</span></div>
+      </div>
+
+      <div class="roles-summary" id="roles-summary"></div>
+
+      <div class="win-scores" id="win-scores"></div>
+
+      <div class="win-actions">
+        <button class="btn btn-primary" id="btn-play-again">Play Again (Same Room)</button>
+        <button class="btn btn-ghost" id="btn-back-home-win">Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST + SOUND ==================== -->
+  <div id="toast" class="toast"></div>
+  <button class="sound-toggle" id="sound-toggle" title="Toggle Sound">🔊</button>
+
+  <!-- Socket.IO client (served by server) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="wordbank.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
