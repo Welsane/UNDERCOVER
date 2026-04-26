@@ -408,14 +408,13 @@ ul, ol { list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100dvh;
   padding: 24px 20px 40px;
   background:
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167,139,250,0.18) 0%, transparent 70%),
     radial-gradient(ellipse 60% 50% at 80% 100%, rgba(236,72,153,0.12) 0%, transparent 60%),
     var(--bg);
-  overflow: hidden;
 }
 
 .home-bg-glow {
@@ -441,6 +440,7 @@ ul, ol { list-style: none; }
   gap: 0;
   width: 100%;
   max-width: 400px;
+  margin: auto 0;
 }
 
 .logo-wrap {
@@ -1621,13 +1621,12 @@ ul, ol { list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100dvh;
   padding: 32px 20px;
   background:
     radial-gradient(ellipse 70% 50% at 50% 30%, rgba(244,63,94,0.2) 0%, transparent 65%),
     var(--bg);
-  overflow: hidden;
 }
 
 .elimination-theater {
@@ -1637,6 +1636,7 @@ ul, ol { list-style: none; }
   gap: 24px;
   max-width: 400px;
   width: 100%;
+  margin: auto 0;
 }
 
 .elim-ring {
@@ -1738,10 +1738,9 @@ ul, ol { list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100dvh;
   padding: 32px 20px 40px;
-  overflow: hidden;
   position: relative;
   background:
     radial-gradient(ellipse 80% 60% at 50% 10%, rgba(167,139,250,0.2) 0%, transparent 65%),
@@ -1793,6 +1792,7 @@ ul, ol { list-style: none; }
   z-index: 1;
   width: 100%;
   max-width: 420px;
+  margin: auto 0;
 }
 
 .win-badge {
