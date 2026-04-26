@@ -1000,7 +1000,7 @@ ul, ol { list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100dvh;
   padding: 24px 20px 40px;
   background:
@@ -1015,6 +1015,7 @@ ul, ol { list-style: none; }
   gap: 20px;
   width: 100%;
   max-width: 400px;
+  margin: auto 0;
 }
 
 .reveal-header {
